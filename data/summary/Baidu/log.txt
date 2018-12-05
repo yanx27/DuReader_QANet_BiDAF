@@ -1,0 +1,65 @@
+2018-12-05 16:10:49,417 - brc - INFO - Running with args : Namespace(algo='BIDAF', batch_size=32, brc_dir='./data/baidu', dev_files=['./data/demo/search.dev.json'], dropout_keep_prob=0.7, embed_size=300, epochs=10, evaluate=False, gpu='0', hidden_size=128, learning_rate=0.001, log_path='./data/summary/Baidu/log.txt', max_a_len=200, max_p_len=500, max_p_num=5, max_q_len=60, model_dir='./data/models/Baidu/', optim='adam', predict=False, prepare=False, result_dir='./data/results/Baidu/', summary_dir='./data/summary/Baidu/', test_files=['./data/demo/search.test.json'], train=True, train_files=['./data/demo/search.train.json'], vocab_dir='./data/vocab/', weight_decay=0)
+2018-12-05 16:10:49,418 - brc - INFO - Load data_set and vocab...
+2018-12-05 16:10:49,476 - brc - INFO - Train set size: 95 questions.
+2018-12-05 16:10:49,609 - brc - INFO - Dev set size: 100 questions.
+2018-12-05 16:10:49,609 - brc - INFO - Converting text into ids...
+2018-12-05 16:10:49,655 - brc - INFO - Initialize the model...
+2018-12-05 16:10:58,549 - brc - INFO - Time to build graph: 4.9366559982299805 s
+2018-12-05 16:11:05,662 - brc - INFO - There are 4136811 parameters in the model
+2018-12-05 16:11:06,287 - brc - INFO - Training the model...
+2018-12-05 16:11:06,287 - brc - INFO - Training the model for epoch 1
+2018-12-05 16:11:15,606 - brc - INFO - Average train loss for epoch 1 is 14.780079931961863
+2018-12-05 16:11:15,606 - brc - INFO - Evaluating the model after epoch 1
+2018-12-05 16:11:20,812 - brc - INFO - Dev eval loss 14.473697395324708
+2018-12-05 16:11:20,812 - brc - INFO - Dev eval result: {'Bleu-1': 1.9240463957355404e-27, 'Bleu-2': 1.3052462055075273e-27, 'Bleu-3': 8.622788140018076e-28, 'Bleu-4': 1.4017008914866293e-31, 'Rouge-L': 0.0406464516459103}
+2018-12-05 16:11:21,716 - brc - INFO - Model saved in ./data/models/Baidu/, with prefix BIDAF.
+2018-12-05 16:11:21,716 - brc - INFO - Training the model for epoch 2
+2018-12-05 16:11:27,800 - brc - INFO - Average train loss for epoch 2 is 13.260245724728232
+2018-12-05 16:11:27,800 - brc - INFO - Evaluating the model after epoch 2
+2018-12-05 16:11:31,869 - brc - INFO - Dev eval loss 13.413828430175782
+2018-12-05 16:11:31,870 - brc - INFO - Dev eval result: {'Bleu-1': 1.853118335426405e-18, 'Bleu-2': 1.6539751013873694e-18, 'Bleu-3': 1.5959533274189157e-18, 'Bleu-4': 1.5017837180431743e-18, 'Rouge-L': 0.027093915059124413}
+2018-12-05 16:11:32,365 - brc - INFO - Model saved in ./data/models/Baidu/, with prefix BIDAF.
+2018-12-05 16:11:32,365 - brc - INFO - Training the model for epoch 3
+2018-12-05 16:11:37,872 - brc - INFO - Average train loss for epoch 3 is 12.254013804385536
+2018-12-05 16:11:37,872 - brc - INFO - Evaluating the model after epoch 3
+2018-12-05 16:11:42,373 - brc - INFO - Dev eval loss 12.719004135131836
+2018-12-05 16:11:42,374 - brc - INFO - Dev eval result: {'Bleu-1': 3.162623464066586e-14, 'Bleu-2': 2.948471712079118e-14, 'Bleu-3': 2.929996448841475e-14, 'Bleu-4': 3.0083243087790664e-14, 'Rouge-L': 0.04705750504735779}
+2018-12-05 16:11:42,871 - brc - INFO - Model saved in ./data/models/Baidu/, with prefix BIDAF.
+2018-12-05 16:11:42,871 - brc - INFO - Training the model for epoch 4
+2018-12-05 16:11:48,602 - brc - INFO - Average train loss for epoch 4 is 11.253591808519865
+2018-12-05 16:11:48,602 - brc - INFO - Evaluating the model after epoch 4
+2018-12-05 16:11:53,347 - brc - INFO - Dev eval loss 12.715067977905273
+2018-12-05 16:11:53,347 - brc - INFO - Dev eval result: {'Bleu-1': 0.008582826484329516, 'Bleu-2': 0.00671527365542541, 'Bleu-3': 0.00569017426714938, 'Bleu-4': 0.0050128512981871655, 'Rouge-L': 0.07590216478571757}
+2018-12-05 16:11:53,814 - brc - INFO - Model saved in ./data/models/Baidu/, with prefix BIDAF.
+2018-12-05 16:11:53,814 - brc - INFO - Training the model for epoch 5
+2018-12-05 16:11:59,425 - brc - INFO - Average train loss for epoch 5 is 10.588453834935239
+2018-12-05 16:11:59,426 - brc - INFO - Evaluating the model after epoch 5
+2018-12-05 16:12:03,921 - brc - INFO - Dev eval loss 13.433922424316407
+2018-12-05 16:12:03,922 - brc - INFO - Dev eval result: {'Bleu-1': 3.524309480324016e-24, 'Bleu-2': 2.1649661039613406e-24, 'Bleu-3': 1.6043732650237063e-24, 'Bleu-4': 2.762247375565748e-28, 'Rouge-L': 0.05238311703604033}
+2018-12-05 16:12:03,922 - brc - INFO - Training the model for epoch 6
+2018-12-05 16:12:09,214 - brc - INFO - Average train loss for epoch 6 is 10.558062954952842
+2018-12-05 16:12:09,214 - brc - INFO - Evaluating the model after epoch 6
+2018-12-05 16:12:13,439 - brc - INFO - Dev eval loss 13.608406791687012
+2018-12-05 16:12:13,439 - brc - INFO - Dev eval result: {'Bleu-1': 3.617054466648332e-24, 'Bleu-2': 2.1932675156677e-24, 'Bleu-3': 1.6183250371824435e-24, 'Bleu-4': 2.7802434241250716e-28, 'Rouge-L': 0.04271044099298942}
+2018-12-05 16:12:13,439 - brc - INFO - Training the model for epoch 7
+2018-12-05 16:12:19,416 - brc - INFO - Average train loss for epoch 7 is 10.426627450240286
+2018-12-05 16:12:19,417 - brc - INFO - Evaluating the model after epoch 7
+2018-12-05 16:12:24,254 - brc - INFO - Dev eval loss 13.532790832519531
+2018-12-05 16:12:24,254 - brc - INFO - Dev eval result: {'Bleu-1': 0.007675415858804939, 'Bleu-2': 0.005662310086193319, 'Bleu-3': 0.004559460762143812, 'Bleu-4': 0.003872605960052473, 'Rouge-L': 0.06592618425616892}
+2018-12-05 16:12:24,254 - brc - INFO - Training the model for epoch 8
+2018-12-05 16:12:30,034 - brc - INFO - Average train loss for epoch 8 is 10.398492722762258
+2018-12-05 16:12:30,035 - brc - INFO - Evaluating the model after epoch 8
+2018-12-05 16:12:35,246 - brc - INFO - Dev eval loss 13.568444747924804
+2018-12-05 16:12:35,246 - brc - INFO - Dev eval result: {'Bleu-1': 0.23054732031689215, 'Bleu-2': 0.16799786361717367, 'Bleu-3': 0.13265689603778946, 'Bleu-4': 0.11163604629290777, 'Rouge-L': 0.1862165570656174}
+2018-12-05 16:12:35,762 - brc - INFO - Model saved in ./data/models/Baidu/, with prefix BIDAF.
+2018-12-05 16:12:35,763 - brc - INFO - Training the model for epoch 9
+2018-12-05 16:12:41,973 - brc - INFO - Average train loss for epoch 9 is 10.138650683352822
+2018-12-05 16:12:41,973 - brc - INFO - Evaluating the model after epoch 9
+2018-12-05 16:12:47,194 - brc - INFO - Dev eval loss 13.369451332092286
+2018-12-05 16:12:47,194 - brc - INFO - Dev eval result: {'Bleu-1': 0.2119369944188092, 'Bleu-2': 0.15412368558957212, 'Bleu-3': 0.12151989829984396, 'Bleu-4': 0.10219747110141182, 'Rouge-L': 0.1937621596279117}
+2018-12-05 16:12:47,195 - brc - INFO - Training the model for epoch 10
+2018-12-05 16:12:53,205 - brc - INFO - Average train loss for epoch 10 is 9.971796969363563
+2018-12-05 16:12:53,206 - brc - INFO - Evaluating the model after epoch 10
+2018-12-05 16:12:58,339 - brc - INFO - Dev eval loss 13.233661804199219
+2018-12-05 16:12:58,339 - brc - INFO - Dev eval result: {'Bleu-1': 0.2203416167216593, 'Bleu-2': 0.16158537509667203, 'Bleu-3': 0.12983972571097696, 'Bleu-4': 0.11075027848159795, 'Rouge-L': 0.22295383604364438}
+2018-12-05 16:12:58,340 - brc - INFO - Done with model training!

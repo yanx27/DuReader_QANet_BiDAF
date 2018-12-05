@@ -1,0 +1,58 @@
+2018-12-05 16:06:41,621 - QANet - INFO - Running with args : Namespace(algo='qanet', batch_size=16, char_embed_size=32, clip_weight=True, decay=None, dev_files=['./data/demo/search.dev.json'], dropout=0.5, epochs=10, evaluate=False, fix_pretrained_vector=True, gpu='0', head_size=1, hidden_size=64, l2_norm=3e-07, learning_rate=0.0001, log_path='./data/summary/Our/log.txt', loss_type='cross_entropy', max_a_len=200, max_ch_len=20, max_norm_grad=5.0, max_p_len=400, max_p_num=5, max_q_len=60, model_dir='./data/models/Our/', optim='adam', predict=False, prepare=False, pretrained_char_path=None, pretrained_word_path=None, result_dir='./data/results/Our/', save_dir='./data/baidu', summary_dir='./data/summary/Our/', test_files=['./data/demo/search.test.json'], train=True, train_files=['./data/demo/search.train.json'], use_position_attn=False, vocab_dir='./data/vocab/', weight_decay=1e-05, word_embed_size=150)
+2018-12-05 16:06:41,621 - QANet - INFO - ====== training ======
+2018-12-05 16:06:41,621 - QANet - INFO - Load data_set and vocab...
+2018-12-05 16:06:41,852 - QANet - INFO - Converting text into ids...
+2018-12-05 16:06:42,212 - QANet - INFO - Initialize the model...
+2018-12-05 16:06:42,212 - QANet - INFO - numbers of passages 5
+2018-12-05 16:06:48,501 - QANet - INFO - loss type cross_entropy
+2018-12-05 16:06:48,501 - QANet - INFO - applying l2 loss
+2018-12-05 16:06:48,564 - QANet - INFO - applying optimize adam
+2018-12-05 16:06:52,957 - QANet - INFO - Time to build graph: 6.635389089584351 s
+2018-12-05 16:06:52,957 - QANet - INFO - There are 118253 parameters in the model
+2018-12-05 16:06:53,747 - QANet - INFO - Training the model...
+2018-12-05 16:06:53,747 - QANet - INFO - Training the model for epoch 1
+2018-12-05 16:07:01,624 - QANet - INFO - Average train loss for epoch 1 is 40.30708656311035
+2018-12-05 16:07:01,625 - QANet - INFO - Evaluating the model after epoch 1
+2018-12-05 16:07:14,693 - QANet - INFO - Dev eval loss 16.197167078653973
+2018-12-05 16:07:14,694 - QANet - INFO - Dev eval result: {'Bleu-1': 0.023220159569120623, 'Bleu-2': 0.01958768316980882, 'Bleu-3': 0.017384564408887797, 'Bleu-4': 0.01581017309765314, 'Rouge-L': 0.0733494108271532}
+2018-12-05 16:07:15,651 - QANet - INFO - Model saved in ./data/models/Our/, with prefix qanet.
+2018-12-05 16:07:15,651 - QANet - INFO - Training the model for epoch 2
+2018-12-05 16:07:17,998 - QANet - INFO - Average train loss for epoch 2 is 40.822383117675784
+2018-12-05 16:07:17,998 - QANet - INFO - Evaluating the model after epoch 2
+2018-12-05 16:07:29,801 - QANet - INFO - Dev eval loss 16.071690400441486
+2018-12-05 16:07:29,801 - QANet - INFO - Dev eval result: {'Bleu-1': 0.023251126800697016, 'Bleu-2': 0.01961375165430218, 'Bleu-3': 0.017407651843468073, 'Bleu-4': 0.015831124387440235, 'Rouge-L': 0.07332001480693381}
+2018-12-05 16:07:29,801 - QANet - INFO - Training the model for epoch 3
+2018-12-05 16:07:32,127 - QANet - INFO - Average train loss for epoch 3 is 43.08843574523926
+2018-12-05 16:07:32,127 - QANet - INFO - Evaluating the model after epoch 3
+2018-12-05 16:07:44,059 - QANet - INFO - Dev eval loss 15.967159112294516
+2018-12-05 16:07:44,059 - QANet - INFO - Dev eval result: {'Bleu-1': 0.021894240730463952, 'Bleu-2': 0.018593025511571125, 'Bleu-3': 0.016546881424618916, 'Bleu-4': 0.015077357205534072, 'Rouge-L': 0.0724741272704291}
+2018-12-05 16:07:44,059 - QANet - INFO - Training the model for epoch 4
+2018-12-05 16:07:46,419 - QANet - INFO - Average train loss for epoch 4 is 41.69960098266601
+2018-12-05 16:07:46,419 - QANet - INFO - Evaluating the model after epoch 4
+2018-12-05 16:07:58,653 - QANet - INFO - Dev eval loss 15.861272970835367
+2018-12-05 16:07:58,653 - QANet - INFO - Dev eval result: {'Bleu-1': 0.018640215794226728, 'Bleu-2': 0.015916832732673008, 'Bleu-3': 0.014204084923516503, 'Bleu-4': 0.012964038696194237, 'Rouge-L': 0.06920040230720144}
+2018-12-05 16:07:58,653 - QANet - INFO - Training the model for epoch 5
+2018-12-05 16:08:01,008 - QANet - INFO - Average train loss for epoch 5 is 44.24815216064453
+2018-12-05 16:08:01,008 - QANet - INFO - Evaluating the model after epoch 5
+2018-12-05 16:08:12,920 - QANet - INFO - Dev eval loss 15.755852222442627
+2018-12-05 16:08:12,921 - QANet - INFO - Dev eval result: {'Bleu-1': 0.01972934124550547, 'Bleu-2': 0.016730450501722928, 'Bleu-3': 0.0148881283541674, 'Bleu-4': 0.013561531386036352, 'Rouge-L': 0.069772149501957}
+2018-12-05 16:08:12,921 - QANet - INFO - Training the model for epoch 6
+2018-12-05 16:08:15,253 - QANet - INFO - Average train loss for epoch 6 is 38.711204528808594
+2018-12-05 16:08:15,253 - QANet - INFO - Evaluating the model after epoch 6
+2018-12-05 16:08:26,838 - QANet - INFO - Dev eval loss 15.652226448059082
+2018-12-05 16:08:26,838 - QANet - INFO - Dev eval result: {'Bleu-1': 0.04426490278161863, 'Bleu-2': 0.03625475159539976, 'Bleu-3': 0.03134930799706563, 'Bleu-4': 0.02806711002483503, 'Rouge-L': 0.0749571372131011}
+2018-12-05 16:08:27,544 - QANet - INFO - Model saved in ./data/models/Our/, with prefix qanet.
+2018-12-05 16:08:27,544 - QANet - INFO - Training the model for epoch 7
+2018-12-05 16:08:29,887 - QANet - INFO - Average train loss for epoch 7 is 34.00931243896484
+2018-12-05 16:08:29,888 - QANet - INFO - Evaluating the model after epoch 7
+2018-12-05 16:08:41,665 - QANet - INFO - Dev eval loss 15.530571460723877
+2018-12-05 16:08:41,665 - QANet - INFO - Dev eval result: {'Bleu-1': 0.038882892983300346, 'Bleu-2': 0.03059310069176876, 'Bleu-3': 0.025633614954606164, 'Bleu-4': 0.022513617188727728, 'Rouge-L': 0.06969592994251612}
+2018-12-05 16:08:41,665 - QANet - INFO - Training the model for epoch 8
+2018-12-05 16:08:44,037 - QANet - INFO - Average train loss for epoch 8 is 41.82072372436524
+2018-12-05 16:08:44,037 - QANet - INFO - Evaluating the model after epoch 8
+2018-12-05 16:08:54,610 - QANet - INFO - Dev eval loss 15.410685539245605
+2018-12-05 16:08:54,610 - QANet - INFO - Dev eval result: {'Bleu-1': 0.08968022930312824, 'Bleu-2': 0.06852454105872549, 'Bleu-3': 0.05679355742621367, 'Bleu-4': 0.04958612274141762, 'Rouge-L': 0.09852262950761097}
+2018-12-05 16:08:55,170 - QANet - INFO - Model saved in ./data/models/Our/, with prefix qanet.
+2018-12-05 16:08:55,170 - QANet - INFO - Training the model for epoch 9
+2018-12-05 16:08:57,512 - QANet - INFO - Average train loss for epoch 9 is 29.098448944091796
+2018-12-05 16:08:57,512 - QANet - INFO - Evaluating the model after epoch 9

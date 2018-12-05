@@ -1,0 +1,2 @@
+model_checkpoint_path: "BIDAF"
+all_model_checkpoint_paths: "BIDAF"
