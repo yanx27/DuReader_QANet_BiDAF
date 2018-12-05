@@ -1,1 +1,3 @@
-# DuReader_QANet_BiDAF
+# Machine reading comprehension on DuReader by QANet+BiDAF
+
+Writen by Yanxu, FangYueran and ZhangTianyang
