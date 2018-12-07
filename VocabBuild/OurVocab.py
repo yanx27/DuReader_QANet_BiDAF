@@ -15,7 +15,7 @@ class Vocab(object):
         self.char2id = {}
         self.char_cnt = {}
 
-        self.lower = lower   # lower fn
+        self.lower = lower   
 
         self.word_embed_dim = None
         self.word_embeddings = None
@@ -87,7 +87,7 @@ class Vocab(object):
                 self.char_cnt[token] = cnt
         return idx
 
-    def filter_words_by_cnt(self, min_cnt): # 将词典里面重复出现的词过滤出来
+    def filter_words_by_cnt(self, min_cnt): 
         filtered_tokens = [token for token in self.word2id if self.word_cnt[token] >= min_cnt]
         # rebuild the token x id map
         self.word2id = {}
