@@ -205,7 +205,7 @@ class BRCDataset(object):
             pad_id: pad id
             shuffle: if set to be true, the data is shuffled.
         Returns:
-            a generator for all batches
+            a generator for all batches 
         """
         if set_name == 'train':
             data = self.train_set
