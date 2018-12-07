@@ -49,6 +49,7 @@ class Model(object):
 
         # save info
         self.saver = tf.train.Saver()
+        self.train_writer = tf.summary.FileWriter(self.config.summary_dir, self.sess.graph)
 
         # initialize the model
         self.sess.run(tf.global_variables_initializer())
@@ -167,13 +168,13 @@ class Model(object):
             qh_emb = conv(qh_emb, d,
                 bias = True, activation = tf.nn.relu, kernel_size = 5, name = "char_conv", reuse = True)
 
-            ch_emb = tf.reduce_max(ch_emb, axis = 1)
+            ch_emb = tf.reduce_max(ch_emb, axis = 1) # character-level feature
             qh_emb = tf.reduce_max(qh_emb, axis = 1)
 
             ch_emb = tf.reshape(ch_emb, [N* self.max_p_num, PL, -1])
             qh_emb = tf.reshape(qh_emb, [N* self.max_p_num, QL, -1])
 
-            c_emb = tf.nn.dropout(tf.nn.embedding_lookup(self.word_mat, self.c), 1.0 - self.dropout)
+            c_emb = tf.nn.dropout(tf.nn.embedding_lookup(self.word_mat, self.c), 1.0 - self.dropout) # word embedding
             q_emb = tf.nn.dropout(tf.nn.embedding_lookup(self.word_mat, self.q), 1.0 - self.dropout)
 
             c_emb = tf.concat([c_emb, ch_emb], axis=2)
@@ -318,7 +319,6 @@ class Model(object):
             ema_op = self.var_ema.apply(tf.trainable_variables())
             with tf.control_dependencies([ema_op]):
                 self.loss = tf.identity(self.loss)
-
                 self.shadow_vars = []
                 self.global_vars = []
                 for var in tf.global_variables():
@@ -386,33 +386,7 @@ class Model(object):
             C = tf.multiply(alpha, output)
             return tf.concat([output, C], axis=-1)
 
-    def _train_epoch(self, train_batches, dropout):
-        total_num, total_loss = 0, 0
-        log_every_n_batch, n_batch_loss = 1000, 0
-        for bitx, batch in enumerate(train_batches, 1):
-            feed_dict = {self.c: batch['passage_token_ids'],
-                         self.q: batch['question_token_ids'],
-                         self.qh: batch['question_char_ids'],
-                         self.ch: batch["passage_char_ids"],
-                         self.start_label: batch['start_id'],
-                         self.end_label: batch['end_id'],
-                         self.dropout: dropout}
 
-            try:
-                _, loss, global_step = self.sess.run([self.train_op, self.loss, self.global_step], feed_dict)
-                total_loss += loss * len(batch['raw_data'])
-                total_num += len(batch['raw_data'])
-                n_batch_loss += loss
-            except Exception as e:
-                # print("Error>>>", e)
-                continue
-
-            if log_every_n_batch > 0 and bitx % log_every_n_batch == 0:
-                self.logger.info('Average loss from batch {} to {} is {}'.format(
-                    bitx - log_every_n_batch + 1, bitx, n_batch_loss / log_every_n_batch))
-                n_batch_loss = 0
-        print("total_num", total_num)
-        return 1.0 * total_loss / total_num
 
     def _params(self):
         return (self.config.batch_size if not self.demo else 1, self.max_p_len,
@@ -421,22 +395,69 @@ class Model(object):
 
     def train(self, data, epochs, batch_size, save_dir, save_prefix,
               dropout=0.0, evaluate=True):
+
+
+        def _train_epoch(train_batches, dropout,merged,train_writer,sess,total_step):
+            total_num, total_loss = 0, 0
+            log_every_n_batch, n_batch_loss = 1000, 0
+
+            for bitx, batch in enumerate(train_batches, 1):
+                feed_dict = {self.c: batch['passage_token_ids'],
+                             self.q: batch['question_token_ids'],
+                             self.qh: batch['question_char_ids'],
+                             self.ch: batch["passage_char_ids"],
+                             self.start_label: batch['start_id'],
+                             self.end_label: batch['end_id'],
+                             self.dropout: dropout}
+
+                try:
+                    _, loss, global_step = self.sess.run([self.train_op, self.loss, self.global_step], feed_dict)
+                    total_loss += loss * len(batch['raw_data'])
+                    total_num += len(batch['raw_data'])
+                    n_batch_loss += loss
+                    summary = sess.run(merged, feed_dict)
+                    train_writer.add_summary(summary, total_step)
+                    total_step += 1
+
+                except Exception as e:
+                    # print("Error>>>", e)
+                    continue
+
+
+                if log_every_n_batch > 0 and bitx % log_every_n_batch == 0:
+                    self.logger.info('Average loss from batch {} to {} is {}'.format(
+                        bitx - log_every_n_batch + 1, bitx, n_batch_loss / log_every_n_batch))
+                    n_batch_loss = 0
+            # print("total_num", total_num)
+            return 1.0 * total_loss / total_num, total_step
+
         pad_id = self.vocab.get_word_id(self.vocab.pad_token)
         pad_char_id = self.vocab.get_char_id(self.vocab.pad_token)
         max_rouge_l = 0
+
+        # tf.summary.scalar('learning_rate', self.learning_rate)
+        tf.summary.scalar('loss', self.loss)
+        # tf.summary.scalar('weight_decay', self.weight_decay)
+        merged = tf.summary.merge_all()
+        total_step = 1
+
         for epoch in range(1, epochs + 1):
             self.logger.info('Training the model for epoch {}'.format(epoch))
             train_batches = data.next_batch('train', batch_size, pad_id, pad_char_id, shuffle=True)
-            train_loss = self._train_epoch(train_batches, dropout)
+            train_loss, total_step = _train_epoch(train_batches, dropout, merged, self.train_writer,self.sess,total_step)
             self.logger.info('Average train loss for epoch {} is {}'.format(epoch, train_loss))
+
 
             if evaluate:
                 self.logger.info('Evaluating the model after epoch {}'.format(epoch))
+                print('Evaluating the model after epoch {}'.format(epoch))
                 if data.dev_set is not None:
                     eval_batches = data.next_batch('dev', batch_size, pad_id, pad_char_id, shuffle=False)
                     eval_loss, bleu_rouge = self.evaluate(eval_batches)
                     self.logger.info('Dev eval loss {}'.format(eval_loss))
+                    print('Dev eval loss {}'.format(eval_loss))
                     self.logger.info('Dev eval result: {}'.format(bleu_rouge))
+                    print('Dev eval result: {}'.format(bleu_rouge))
 
                     if bleu_rouge['Rouge-L'] > max_rouge_l:
                         self.save(save_dir, save_prefix)
@@ -445,6 +466,7 @@ class Model(object):
                     print('No dev set is loaded for evaluation in the dataset!')
             else:
                 self.save(save_dir, save_prefix + '_' + str(epoch))
+
 
     def evaluate(self, eval_batches, result_dir=None, result_prefix=None, save_full_info=False):
         pred_answers, ref_answers = [], []
@@ -475,15 +497,11 @@ class Model(object):
                     else:
                         pred_answers.append({'question_id': sample['question_id'],
                                              'question_type': sample['question_type'],
-                                             'answers': [best_answer],
-                                             'entity_answers': [[]],
-                                             'yesno_answers': []})
+                                             'answers': [best_answer]})
                     if 'answers' in sample:
                         ref_answers.append({'question_id': sample['question_id'],
                                              'question_type': sample['question_type'],
-                                             'answers': sample['answers'],
-                                             'entity_answers': [[]],
-                                             'yesno_answers': []})
+                                             'answers': sample['answers']})
 
             except:
                 continue

@@ -43,7 +43,7 @@ class RCModel(object):
     def __init__(self, vocab, args):
 
         # logging
-        self.logger = logging.getLogger("BiDAF")
+        self.logger = logging.getLogger("brc")
 
         # basic config
         self.algo = args.algo
@@ -71,6 +71,7 @@ class RCModel(object):
 
         # save info
         self.saver = tf.train.Saver()
+        self.train_writer = tf.summary.FileWriter(args.summary_dir, self.sess.graph)
 
         # initialize the model
         self.sess.run(tf.global_variables_initializer())
@@ -215,7 +216,7 @@ class RCModel(object):
             raise NotImplementedError('Unsupported optimizer: {}'.format(self.optim_type))
         self.train_op = self.optimizer.minimize(self.loss)
 
-    def _train_epoch(self, train_batches, dropout_keep_prob):
+    def _train_epoch(self, train_batches, dropout_keep_prob,merged,total_step):
         """
         Trains the model for a single epoch.
         Args:
@@ -236,11 +237,14 @@ class RCModel(object):
             total_loss += loss * len(batch['raw_data'])
             total_num += len(batch['raw_data'])
             n_batch_loss += loss
+            summary = self.sess.run(merged, feed_dict)
+            self.train_writer.add_summary(summary, total_step)
+            total_step += 1
             if log_every_n_batch > 0 and bitx % log_every_n_batch == 0:
                 self.logger.info('Average loss from batch {} to {} is {}'.format(
                     bitx - log_every_n_batch + 1, bitx, n_batch_loss / log_every_n_batch))
                 n_batch_loss = 0
-        return 1.0 * total_loss / total_num
+        return 1.0 * total_loss / total_num,total_step
 
     def train(self, data, epochs, batch_size, save_dir, save_prefix,
               dropout_keep_prob=1.0, evaluate=True):
@@ -257,10 +261,13 @@ class RCModel(object):
         """
         pad_id = self.vocab.get_id(self.vocab.pad_token)
         max_bleu_4 = 0
+        tf.summary.scalar('train_loss', self.loss)
+        merged = tf.summary.merge_all()
+        total_step = 1
         for epoch in range(1, epochs + 1):
             self.logger.info('Training the model for epoch {}'.format(epoch))
             train_batches = data.gen_mini_batches('train', batch_size, pad_id, shuffle=True)
-            train_loss = self._train_epoch(train_batches, dropout_keep_prob)
+            train_loss,total_step = self._train_epoch(train_batches, dropout_keep_prob,merged,total_step)
             self.logger.info('Average train loss for epoch {} is {}'.format(epoch, train_loss))
 
             if evaluate:
