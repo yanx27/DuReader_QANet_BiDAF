@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''Writen by Yanxu, FangYueran and ZhangTianyang'''
+'''Writen by YanXu, FangYueran and ZhangTianyang'''
 import os
 import pickle
 import logging
@@ -8,14 +8,16 @@ from dataloader.OurDataLoader import DataLoader
 from VocabBuild.OurVocab import Vocab
 from model.OurModel import Model
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
+'''Which dataset do you want to use, just choose between search and zhidao'''
+dataName = 'zhidao'
 
 def parse_args():
     '''
     --All argument of our model--
     In our experiment, we use:
-     --prepro
-     --train --decay 0.9999
+     --prepare
+     --train --decay 0.9999 --epoch 100
      --evaluate --dropout 0
      --predict --dropout 0
     '''
@@ -28,7 +30,7 @@ def parse_args():
                         help='evaluate the model on dev set')
     parser.add_argument('--predict', action='store_true',
                         help='predict the answers for test set with trained model')
-    parser.add_argument('--gpu', type=str, default='0',
+    parser.add_argument('--gpu', type=str, default='1',
                         help='specify gpu device')
 
     train_settings = parser.add_argument_group('train settings')
@@ -40,7 +42,7 @@ def parse_args():
                         help='fixed pretrained vector')
     train_settings.add_argument('--optim', default='adam',
                                 help='optimizer type')
-    train_settings.add_argument('--learning_rate', type=float, default=0.0001,
+    train_settings.add_argument('--learning_rate', type=float, default=0.00005,
                                 help='learning rate')
     train_settings.add_argument('--weight_decay', type=float, default=1e-5,
                                 help='loss weight decay')
@@ -52,7 +54,7 @@ def parse_args():
                                 help='clip weight')
     train_settings.add_argument('--max_norm_grad', type=float, default=5.0,
                                 help='max norm grad')
-    train_settings.add_argument('--dropout', type=float, default=0.5,
+    train_settings.add_argument('--dropout', type=float, default=0,
                                 help='dropout rate')
     train_settings.add_argument('--batch_size', type=int, default=16,
                                 help='train batch size')
@@ -78,32 +80,36 @@ def parse_args():
                                 help='max length of answer')
     model_settings.add_argument('--max_ch_len', type=int, default=20,
                                 help='max length of character of a word')
-    model_settings.add_argument('--use_position_attn', type=bool, default=False,
+    model_settings.add_argument('--use_position_attn', type=bool, default=True,  ### Our provement ###
                                 help='use position attention')
 
     path_settings = parser.add_argument_group('path settings')
     path_settings.add_argument('--train_files', nargs='+',
-                               default=['./data/demo/search.train.json'],
+                               default=['./data/demo/'+dataName+'.train20000.json','./data/demo/'+dataName+'.dev10000.json'],
+                               # './data/demo/'+dataName+'.train20000.json' search.train.json
                                help='list of files that contain the preprocessed train data')
     path_settings.add_argument('--dev_files', nargs='+',
-                               default=['./data/demo/search.dev.json'],
+                               default=['./data/demo/'+dataName+'.dev10000.json'],
+                               # './data/demo/'+dataName+'.dev10000.json'
                                help='list of files that contain the preprocessed dev data')
     path_settings.add_argument('--test_files', nargs='+',
-                               default=['./data/demo/search.test.json'],
+                               default=['./data/demo/'+dataName+'.test.json'],
+                               # './data/demo/'+dataName+'.test10000.json'
                                help='list of files that contain the preprocessed test data')
     path_settings.add_argument('--save_dir', default='./data/baidu',
                                help='the dir with preprocessed baidu reading comprehension data')
-    path_settings.add_argument('--vocab_dir', default='./data/vocab/',
+    path_settings.add_argument('--vocab_dir', default='./data/vocab/'+dataName+'/',
                                help='the dir to save vocabulary')
-    path_settings.add_argument('--model_dir', default='./data/models/Our/',
+    path_settings.add_argument('--model_dir', default='./data/models/Our/'+dataName+'/',
                                help='the dir to store models')
-    path_settings.add_argument('--result_dir', default='./data/results/Our/',
+    path_settings.add_argument('--result_dir', default='./data/results/Our/'+dataName+'/',
                                help='the dir to output the results')
-    path_settings.add_argument('--summary_dir', default='./data/summary/Our/',
+    path_settings.add_argument('--summary_dir', default='./data/summary/Our/'+dataName+'/',
                                help='the dir to write tensorboard summary')
-    path_settings.add_argument('--log_path', default='./data/summary/Our/log.txt',
+    path_settings.add_argument('--log_path', default='./data/summary/Our/'+dataName+'/log.txt',
                                help='path of the log file. If not set, logs are printed to console')
-    path_settings.add_argument('--pretrained_word_path',default=None,
+    path_settings.add_argument('--pretrained_word_path',
+                               default='./embeding/sgns.target.word-word.dynwin5.thr10.neg5.dim300.iter5',# 636013 300
                                help='path of the log file. If not set, logs are printed to console')
     path_settings.add_argument('--pretrained_char_path',default=None,
                                help='path of the log file. If not set, logs are printed to console')
@@ -116,16 +122,19 @@ def prepare(args):
     logger = logging.getLogger("QANet")
     logger.info("====== preprocessing ======")
     logger.info('Checking the data files...')
+    print('Checking the data files...')
     for data_path in args.train_files + args.dev_files + args.test_files:
         assert os.path.exists(data_path), '{} file does not exist.'.format(data_path)
 
     logger.info('Preparing the directories...')
+    print('Preparing the directories...')
     for dir_path in [args.vocab_dir, args.model_dir, args.result_dir, args.summary_dir]:
         if not os.path.exists(dir_path):
             os.makedirs(dir_path)
 
     logger.info('Building vocabulary...')
-    dataloader = DataLoader(args.max_p_num, args.max_p_len, args.max_q_len, args.max_ch_len, 
+    print('Building vocabulary...')
+    dataloader = DataLoader(args.max_p_num, args.max_p_len, args.max_q_len, args.max_ch_len,
                           args.train_files, args.dev_files, args.test_files)
 
     vocab = Vocab(lower=True)
@@ -136,7 +145,7 @@ def prepare(args):
     unfiltered_vocab_size = vocab.word_size()
     vocab.filter_words_by_cnt(min_cnt=2)
     filtered_num = unfiltered_vocab_size - vocab.word_size()
-    logger.info('After filter {} tokens, the final vocab size is {}, char size is{}'.format(filtered_num,
+    logger.info('After filter {} tokens, the final vocab size is {}, char size is {}'.format(filtered_num,
                                                                             vocab.word_size(), vocab.char_size()))
 
     unfiltered_vocab_char_size = vocab.char_size()
@@ -157,7 +166,8 @@ def prepare(args):
         vocab.randomly_init_char_embeddings(args.char_embed_size)
 
     logger.info('Saving vocab...')
-    with open(os.path.join(args.vocab_dir, 'OurVocab.data'), 'wb') as fout:
+    print('Saving vocab...')
+    with open(os.path.join(args.vocab_dir, dataName+'OurVocab.data'), 'wb') as fout:
         pickle.dump(vocab, fout)
 
     logger.info('====== Done with preparing! ======')
@@ -169,7 +179,8 @@ def train(args):
     logger.info("====== training ======")
 
     logger.info('Load data_set and vocab...')
-    with open(os.path.join(args.vocab_dir, 'OurVocab.data'), 'rb') as fin:
+    print('Load data_set and vocab...')
+    with open(os.path.join(args.vocab_dir, dataName+'OurVocab.data'), 'rb') as fin:
         vocab = pickle.load(fin)
 
     dataloader = DataLoader(args.max_p_num, args.max_p_len, args.max_q_len, args.max_ch_len,
@@ -182,16 +193,19 @@ def train(args):
     model = Model(vocab, args)
 
     logger.info('Training the model...')
+    print('Training the model...')
     model.train(dataloader, args.epochs, args.batch_size, save_dir=args.model_dir, save_prefix=args.algo, dropout=args.dropout)
 
     logger.info('====== Done with model training! ======')
+    print('====== Done with model training! ======')
 
 def evaluate(args):
     """Evaluate test data"""
     logger = logging.getLogger("QANet")
     logger.info("====== evaluating ======")
     logger.info('Load data_set and vocab...')
-    with open(os.path.join(args.vocab_dir, 'OurVocab.data'), 'rb') as fin:
+    print('Load data_set and vocab...')
+    with open(os.path.join(args.vocab_dir, dataName+'OurVocab.data'), 'rb') as fin:
         vocab = pickle.load(fin)
 
     assert len(args.dev_files) > 0, 'No dev files are provided.'
@@ -199,12 +213,15 @@ def evaluate(args):
                             args.max_ch_len, args.train_files, args.dev_files)
 
     logger.info('Converting text into ids...')
+    print('Converting text into ids...')
     dataloader.convert_to_ids(vocab)
 
     logger.info('Restoring the model...')
+    print('Restoring the model...')
     model = Model(vocab, args)
     model.restore(args.model_dir, args.algo)
     logger.info('Evaluating the model on dev set...')
+    print('Evaluating the model on dev set...')
     dev_batches = dataloader.next_batch('dev', args.batch_size, vocab.get_word_id(vocab.pad_token), vocab.get_char_id(vocab.pad_token), shuffle=False)
 
     dev_loss, dev_bleu_rouge = model.evaluate(
@@ -220,7 +237,8 @@ def predict(args):
     """Predict answers"""
     logger = logging.getLogger("QANet")
     logger.info('Load data_set and vocab...')
-    with open(os.path.join(args.vocab_dir, 'OurVocab.data'), 'rb') as fin:
+    print('Load data_set and vocab...')
+    with open(os.path.join(args.vocab_dir, dataName+'OurVocab.data'), 'rb') as fin:
         vocab = pickle.load(fin)
 
     assert len(args.test_files) > 0, 'No test files are provided.'
@@ -228,12 +246,15 @@ def predict(args):
                           test_files=args.test_files)
 
     logger.info('Converting text into ids...')
+    print('Converting text into ids...')
     dataloader.convert_to_ids(vocab)
     logger.info('Restoring the model...')
+    print('Restoring the model...')
 
     model = Model(vocab, args)
     model.restore(args.model_dir, args.algo)
     logger.info('Predicting answers for test set...')
+    print('Predicting answers for test set...')
     test_batches = dataloader.next_batch('test', args.batch_size, vocab.get_word_id(vocab.pad_token), vocab.get_char_id(vocab.pad_token), shuffle=False)
 
     model.evaluate(test_batches,result_dir=args.result_dir, result_prefix='test.predicted')

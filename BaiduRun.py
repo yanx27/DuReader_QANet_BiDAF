@@ -26,7 +26,10 @@ from VocabBuild.BaiduVocab import Vocab
 from model.BaiduModel import RCModel
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"## written by Fangyueran
+
+'''Which dataset do you want to use, just choose between search and zhidao'''
+dataName = 'search'  ### Yanxu
 
 def parse_args():
     """
@@ -41,7 +44,7 @@ def parse_args():
                         help='evaluate the model on dev set')
     parser.add_argument('--predict', action='store_true',
                         help='predict the answers for test set with trained model')
-    parser.add_argument('--gpu', type=str, default='0',
+    parser.add_argument('--gpu', type=str, default='2',## written by Fangyueran
                         help='specify gpu device')
 
     train_settings = parser.add_argument_group('train settings')
@@ -51,7 +54,7 @@ def parse_args():
                                 help='learning rate')
     train_settings.add_argument('--weight_decay', type=float, default=0,
                                 help='weight decay')
-    train_settings.add_argument('--dropout_keep_prob', type=float, default=0.7,
+    train_settings.add_argument('--dropout_keep_prob', type=float, default=0.5,
                                 help='dropout keep rate')
     train_settings.add_argument('--batch_size', type=int, default=32,
                                 help='train batch size')
@@ -76,25 +79,29 @@ def parse_args():
 
     path_settings = parser.add_argument_group('path settings')
     path_settings.add_argument('--train_files', nargs='+',
-                               default=['./data/demo/search.train.json'],
-                               help='list of files that contain the preprocessed train data')
+                               default=['./data/demo/'+dataName+'.train.json'],
+                               help='list of files that contain the preprocessed train data')  ### yanxu
     path_settings.add_argument('--dev_files', nargs='+',
-                               default=['./data/demo/search.dev.json'],
-                               help='list of files that contain the preprocessed dev data')
+                               default=['./data/demo/'+dataName+'.dev.json'],
+                               help='list of files that contain the preprocessed dev data')  ### yanxu
     path_settings.add_argument('--test_files', nargs='+',
-                               default=['./data/demo/search.test.json'],
+                               default=['./data/demo/'+dataName+'.test.json'],  ### yanxu
                                help='list of files that contain the preprocessed test data')
-    path_settings.add_argument('--brc_dir', default='./data/baidu',
+    path_settings.add_argument('--save_dir', default='./data/baidu',
                                help='the dir with preprocessed baidu reading comprehension data')
-    path_settings.add_argument('--vocab_dir', default='./data/vocab/',
+    path_settings.add_argument('--vocab_dir', default='./data/vocab/'+dataName+'/',
                                help='the dir to save vocabulary')
-    path_settings.add_argument('--model_dir', default='./data/models/Baidu/',
+    path_settings.add_argument('--model_dir', default='./data/models/Baidu/'+dataName+'/',  ### yanxu
                                help='the dir to store models')
-    path_settings.add_argument('--result_dir', default='./data/results/Baidu/',
+    path_settings.add_argument('--result_dir', default='./data/results/Baidu/'+dataName+'/',  ### yanxu
                                help='the dir to output the results')
-    path_settings.add_argument('--summary_dir', default='./data/summary/Baidu/',
+    path_settings.add_argument('--summary_dir', default='./data/summary/Baidu/'+dataName+'/',  ### yanxu
                                help='the dir to write tensorboard summary')
-    path_settings.add_argument('--log_path', default='./data/summary/Baidu/log.txt',
+    path_settings.add_argument('--log_path', default='./data/summary/Baidu/'+dataName+'/log.txt',  ### yanxu
+                               help='path of the log file. If not set, logs are printed to console')
+    path_settings.add_argument('--pretrained_word_path',default=None,
+                               help='path of the log file. If not set, logs are printed to console')
+    path_settings.add_argument('--pretrained_char_path',default=None,
                                help='path of the log file. If not set, logs are printed to console')
     return parser.parse_args()
 
@@ -103,8 +110,9 @@ def prepare(args):
     """
     checks data, creates the directories, prepare the vocabulary and embeddings
     """
-    logger = logging.getLogger("BiDAF")
+    logger = logging.getLogger("brc")
     logger.info('Checking the data files...')
+    print('Checking the data files...')
     for data_path in args.train_files + args.dev_files + args.test_files:
         assert os.path.exists(data_path), '{} file does not exist.'.format(data_path)
     logger.info('Preparing the directories...')
@@ -113,6 +121,7 @@ def prepare(args):
             os.makedirs(dir_path)
 
     logger.info('Building vocabulary...')
+    print('Building vocabulary...')
     brc_data = BRCDataset(args.max_p_num, args.max_p_len, args.max_q_len,
                           args.train_files, args.dev_files, args.test_files)
     vocab = Vocab(lower=True)
@@ -129,7 +138,8 @@ def prepare(args):
     vocab.randomly_init_embeddings(args.embed_size)
 
     logger.info('Saving vocab...')
-    with open(os.path.join(args.vocab_dir, 'BaiduVocab.data'), 'wb') as fout:
+    print('Saving vocab...')
+    with open(os.path.join(args.vocab_dir, dataName+'BaiduVocab.data'), 'wb') as fout:
         pickle.dump(vocab, fout)
 
     logger.info('Done with preparing!')
@@ -139,17 +149,20 @@ def train(args):
     """
     trains the reading comprehension model
     """
-    logger = logging.getLogger("BiDAF")
+    logger = logging.getLogger("brc")
     logger.info('Load data_set and vocab...')
-    with open(os.path.join(args.vocab_dir, 'BaiduVocab.data'), 'rb') as fin:
+    print('Load data_set and vocab...')
+    with open(os.path.join(args.vocab_dir, dataName+'BaiduVocab.data'), 'rb') as fin: ## yanxu
         vocab = pickle.load(fin)
     brc_data = BRCDataset(args.max_p_num, args.max_p_len, args.max_q_len,
                           args.train_files, args.dev_files)
     logger.info('Converting text into ids...')
+    print('Converting text into ids...')
     brc_data.convert_to_ids(vocab)
     logger.info('Initialize the model...')
     rc_model = RCModel(vocab, args)
     logger.info('Training the model...')
+    print('Training the model...')
     rc_model.train(brc_data, args.epochs, args.batch_size, save_dir=args.model_dir,
                    save_prefix=args.algo,
                    dropout_keep_prob=args.dropout_keep_prob)
@@ -160,18 +173,22 @@ def evaluate(args):
     """
     evaluate the trained model on dev files
     """
-    logger = logging.getLogger("BiDAF")
+    logger = logging.getLogger("brc")
     logger.info('Load data_set and vocab...')
-    with open(os.path.join(args.vocab_dir, 'BaiduVocab.data'), 'rb') as fin:
+    print('Load data_set and vocab...')
+    with open(os.path.join(args.vocab_dir, dataName+'BaiduVocab.data'), 'rb') as fin: ## yanxu
         vocab = pickle.load(fin)
     assert len(args.dev_files) > 0, 'No dev files are provided.'
     brc_data = BRCDataset(args.max_p_num, args.max_p_len, args.max_q_len, dev_files=args.dev_files)
     logger.info('Converting text into ids...')
+    print('Converting text into ids...')
     brc_data.convert_to_ids(vocab)
     logger.info('Restoring the model...')
+    print('Restoring the model...')
     rc_model = RCModel(vocab, args)
     rc_model.restore(model_dir=args.model_dir, model_prefix=args.algo)
     logger.info('Evaluating the model on dev set...')
+    print('Evaluating the model on dev set...')
     dev_batches = brc_data.gen_mini_batches('dev', args.batch_size,
                                             pad_id=vocab.get_id(vocab.pad_token), shuffle=False)
     dev_loss, dev_bleu_rouge = rc_model.evaluate(
@@ -185,19 +202,23 @@ def predict(args):
     """
     predicts answers for test files
     """
-    logger = logging.getLogger("BiDAF")
+    logger = logging.getLogger("brc")
     logger.info('Load data_set and vocab...')
-    with open(os.path.join(args.vocab_dir, 'BaiduVocab.data'), 'rb') as fin:
+    print('Load data_set and vocab...')
+    with open(os.path.join(args.vocab_dir, dataName+'BaiduVocab.data'), 'rb') as fin: ## yanxu
         vocab = pickle.load(fin)
     assert len(args.test_files) > 0, 'No test files are provided.'
     brc_data = BRCDataset(args.max_p_num, args.max_p_len, args.max_q_len,
                           test_files=args.test_files)
     logger.info('Converting text into ids...')
+    print('Converting text into ids...')
     brc_data.convert_to_ids(vocab)
     logger.info('Restoring the model...')
+    print('Restoring the model...')
     rc_model = RCModel(vocab, args)
     rc_model.restore(model_dir=args.model_dir, model_prefix=args.algo)
     logger.info('Predicting answers for test set...')
+    print('Predicting answers for test set...')
     test_batches = brc_data.gen_mini_batches('test', args.batch_size,
                                              pad_id=vocab.get_id(vocab.pad_token), shuffle=False)
     rc_model.evaluate(test_batches,
