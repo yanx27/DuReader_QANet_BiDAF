@@ -1,5 +1,5 @@
 # -*- coding:utf8 -*-
-'''Writen by Yanxu, FangYueran and ZhangTianyang'''
+'''Writen by Yanxu, FangYueran and ZhangTianyang''' 
 import json
 import logging
 import numpy as np
