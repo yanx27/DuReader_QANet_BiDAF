@@ -53,9 +53,7 @@ def position_embedding(inputs, position_dim):
     outputs: (batch_size, seq_len, position_dim)
     """
     batch_size,seq_len = tf.shape(inputs)[0], tf.shape(inputs)[1]
-    pos_j = 1. / tf.pow(10000.0, 
-                        2 * tf.range(position_dim / 2, dtype=tf.float32 
-                        ) / position_dim)
+    pos_j = 1. / tf.pow(10000.0, 2 * tf.range(position_dim / 2, dtype=tf.float32 ) / position_dim)
     pos_j = tf.expand_dims(pos_j, 0)
     pos_i = tf.range(tf.cast(seq_len, tf.float32), dtype=tf.float32)
     pos_i = tf.expand_dims(pos_i, 1)
