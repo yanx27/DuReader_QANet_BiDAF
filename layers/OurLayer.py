@@ -29,7 +29,7 @@ initializer_relu = lambda: tf.contrib.layers.variance_scaling_initializer(factor
                                                              uniform=True,
                                                              dtype=tf.float32)
 regularizer = tf.contrib.layers.l2_regularizer(scale = 3e-7)
-
+ 
 def shape_list(inputs):
     """return list of dims"""
     inputs = tf.convert_to_tensor(inputs)
