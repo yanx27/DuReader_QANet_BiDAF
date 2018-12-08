@@ -152,7 +152,7 @@ def train(args):
     logger = logging.getLogger("brc")
     logger.info('Load data_set and vocab...')
     print('Load data_set and vocab...')
-    with open(os.path.join(args.vocab_dir, dataName+'BaiduVocab.data'), 'rb') as fin: ## yanxu
+    with open(os.path.join(args.vocab_dir, dataName+'BaiduVocab.data'), 'rb') as fin:
         vocab = pickle.load(fin)
     brc_data = BRCDataset(args.max_p_num, args.max_p_len, args.max_q_len,
                           args.train_files, args.dev_files)
@@ -176,7 +176,7 @@ def evaluate(args):
     logger = logging.getLogger("brc")
     logger.info('Load data_set and vocab...')
     print('Load data_set and vocab...')
-    with open(os.path.join(args.vocab_dir, dataName+'BaiduVocab.data'), 'rb') as fin: ## yanxu
+    with open(os.path.join(args.vocab_dir, dataName+'BaiduVocab.data'), 'rb') as fin: 
         vocab = pickle.load(fin)
     assert len(args.dev_files) > 0, 'No dev files are provided.'
     brc_data = BRCDataset(args.max_p_num, args.max_p_len, args.max_q_len, dev_files=args.dev_files)
@@ -205,7 +205,7 @@ def predict(args):
     logger = logging.getLogger("brc")
     logger.info('Load data_set and vocab...')
     print('Load data_set and vocab...')
-    with open(os.path.join(args.vocab_dir, dataName+'BaiduVocab.data'), 'rb') as fin: ## yanxu
+    with open(os.path.join(args.vocab_dir, dataName+'BaiduVocab.data'), 'rb') as fin: 
         vocab = pickle.load(fin)
     assert len(args.test_files) > 0, 'No test files are provided.'
     brc_data = BRCDataset(args.max_p_num, args.max_p_len, args.max_q_len,
