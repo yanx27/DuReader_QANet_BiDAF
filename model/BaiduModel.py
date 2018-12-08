@@ -321,6 +321,7 @@ class RCModel(object):
                     pred_answers.append(sample)
                 else:
                     pred_answers.append({'question_id': sample['question_id'],
+                                         'question': ''.join(sample['segmented_question']),
                                          'question_type': sample['question_type'],
                                          'answers': [best_answer],
                                          'entity_answers': [[]],
