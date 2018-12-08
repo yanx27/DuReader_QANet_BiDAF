@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*- 
 '''
 Writen by YanXu, FangYueran and ZhangTianyang
-Adapted from BiDAF
+Partly adapted from BiDAF
 '''
 import os
 import pickle
