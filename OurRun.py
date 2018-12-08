@@ -85,12 +85,10 @@ def parse_args():
 
     path_settings = parser.add_argument_group('path settings')
     path_settings.add_argument('--train_files', nargs='+',
-                               default=['./data/demo/'+dataName+'.train20000.json','./data/demo/'+dataName+'.dev10000.json'],
-                               # './data/demo/'+dataName+'.train20000.json' search.train.json
+                               default=['./data/demo/'+dataName+'.train20000.json',
                                help='list of files that contain the preprocessed train data')
     path_settings.add_argument('--dev_files', nargs='+',
                                default=['./data/demo/'+dataName+'.dev10000.json'],
-                               # './data/demo/'+dataName+'.dev10000.json'
                                help='list of files that contain the preprocessed dev data')
     path_settings.add_argument('--test_files', nargs='+',
                                default=['./data/demo/'+dataName+'.test.json'],
@@ -109,7 +107,7 @@ def parse_args():
     path_settings.add_argument('--log_path', default='./data/summary/Our/'+dataName+'/log.txt',
                                help='path of the log file. If not set, logs are printed to console')
     path_settings.add_argument('--pretrained_word_path',
-                               default='./embeding/sgns.target.word-word.dynwin5.thr10.neg5.dim300.iter5',# 636013 300
+                               default='./embeding/sgns.target.word-word.dynwin5.thr10.neg5.dim300.iter5',
                                help='path of the log file. If not set, logs are printed to console')
     path_settings.add_argument('--pretrained_char_path',default=None,
                                help='path of the log file. If not set, logs are printed to console')
