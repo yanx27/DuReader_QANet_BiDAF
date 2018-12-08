@@ -95,7 +95,6 @@ def parse_args():
                                help='list of files that contain the preprocessed dev data')
     path_settings.add_argument('--test_files', nargs='+',
                                default=['./data/demo/'+dataName+'.test.json'],
-                               # './data/demo/'+dataName+'.test10000.json'
                                help='list of files that contain the preprocessed test data')
     path_settings.add_argument('--save_dir', default='./data/baidu',
                                help='the dir with preprocessed baidu reading comprehension data')
