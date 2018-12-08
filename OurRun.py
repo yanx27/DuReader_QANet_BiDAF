@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*- 
-'''Writen by YanXu, FangYueran and ZhangTianyang'''
+'''
+Writen by YanXu, FangYueran and ZhangTianyang
+Adapted from BiDAF
+'''
 import os
 import pickle
 import logging
