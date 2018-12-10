@@ -83,7 +83,7 @@ def parse_args():
                                 help='max length of answer')
     model_settings.add_argument('--max_ch_len', type=int, default=20,
                                 help='max length of character of a word')
-    model_settings.add_argument('--use_position_attn', type=bool, default=True,  ### Our provement ###
+    model_settings.add_argument('--use_position_attn', type=bool, default=True,  ### Our improvement ###
                                 help='use position attention')
 
     path_settings = parser.add_argument_group('path settings')
