@@ -20,7 +20,7 @@ def parse_args():
     --All argument of our model--
     In our experiment, we use:
      --prepare
-     --train --decay 0.9999 --epoch 100
+     --train --decay 0.9999 --epoch 10
      --evaluate --dropout 0
      --predict --dropout 0
     '''
