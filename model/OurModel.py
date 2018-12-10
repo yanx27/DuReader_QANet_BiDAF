@@ -89,7 +89,7 @@ class Model(object):
             self.end_label = tf.placeholder(tf.int32, [self.config.batch_size],"answer_label2")
 
         self.position_emb = position_embedding(self.c, 2*self.config.hidden_size)
-        self.c_mask = tf.cast(self.c, tf.bool) # index 0 is padding symbol  N x self.max_p_num, max_p_len
+        self.c_mask = tf.cast(self.c, tf.bool) 
         self.q_mask = tf.cast(self.q, tf.bool)
         self.c_len = tf.reduce_sum(tf.cast(self.c_mask, tf.int32), axis=1)
         self.q_len = tf.reduce_sum(tf.cast(self.q_mask, tf.int32), axis=1)
