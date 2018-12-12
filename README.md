@@ -2,7 +2,7 @@
 
 Using QANet and BiDAF on [DuReader](https://github.com/baidu/DuReader). Writen by YanXu, FangYueran and ZhangTianyang<br>
 ### Pretrained embedding
-When we train the QANet model, we use the pretrained word embedding from [Baidu Encyclopedia百度百科](
+When we train the QANet model, we use the pretrained word embedding from [Baidu Encyclopedia](
 https://pan.baidu.com/s/1Rn7LtTH0n7SHyHPfjRHbkg), you can down load and save in folder ./embedding<br>
 ### Full experimental results
 Complete experimental results (including data sets, log of experimental records, tensorboard, and predicted output) can be downloaded from the Baidu network disk：https://pan.baidu.com/s/1qoxnF00wyJ2dqcAPDYTb8w code：gn5b, You can override it with the ./data <br>
