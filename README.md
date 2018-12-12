@@ -9,16 +9,16 @@ Complete experimental results (including data sets, log of experimental records,
 # Usage
 
 ### BiDAF<br>
-generate dict and embedding：`python BaiduRun.py --prepare`<br>
-train： `python BaiduRun.py --train `<br>
-evaluate： `python BaiduRun.py --evaluate`<br>
-test： `python BaiduRun.py --predict`<br>
+Generate dict and embedding：`python BaiduRun.py --prepare`<br>
+Train： `python BaiduRun.py --train `<br>
+Evaluate on dev： `python BaiduRun.py --evaluate`<br>
+Output the answers： `python BaiduRun.py --predict`<br>
 
 ### QANet<br>
-generate dict and embedding：`python OurRun.py --prepare`<br>
-train： `python OurRun.py --train `<br>
-evaluate： `python OurRun.py --evaluate`<br>
-test：` python OurRun.py --predict`<br>
+Generate dict and embedding：`python OurRun.py --prepare`<br>
+Train： `python OurRun.py --train `<br>
+Evaluate on dev： `python OurRun.py --evaluate`<br>
+Output the answers：` python OurRun.py --predict`<br>
 # Reference
 * Reference by [BiDAF](https://github.com/allenai/bi-att-flow) and [QANet](https://github.com/NLPLearn/QANet)
 
