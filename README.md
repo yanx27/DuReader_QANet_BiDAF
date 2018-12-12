@@ -1,6 +1,6 @@
 # Machine Reading Comprehension on DuReader 
 
-Using QANet and BiDAF on Chinese machine reading comprehension dataset. Writen by YanXu, FangYueran and ZhangTianyang<br>
+Using QANet and BiDAF on [DuReader](https://github.com/baidu/DuReader). Writen by YanXu, FangYueran and ZhangTianyang<br>
 ### Pretrained embedding
 When we train the QANet model, we use the pretrained word embedding from [Baidu Encyclopedia百度百科](
 https://pan.baidu.com/s/1Rn7LtTH0n7SHyHPfjRHbkg), you can down load and save in folder ./embedding<br>
@@ -20,6 +20,6 @@ train： `python OurRun.py --train `<br>
 evaluate： `python OurRun.py --evaluate`<br>
 test：` python OurRun.py --predict`<br>
 # Reference
-* Reference by [DuReader](https://github.com/baidu/DuReader) and [QANet](https://github.com/NLPLearn/QANet)
+* Reference by [BiDAF](https://github.com/allenai/bi-att-flow) and [QANet](https://github.com/NLPLearn/QANet)
 
 
