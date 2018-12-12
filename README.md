@@ -13,12 +13,13 @@ Generate dict and embedding：`python BaiduRun.py --prepare`<br>
 Train： `python BaiduRun.py --train `<br>
 Evaluate on dev： `python BaiduRun.py --evaluate`<br>
 Output the answers： `python BaiduRun.py --predict`<br>
-
+![](https://img-blog.csdn.net/20181015145727446?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMyMTEzMTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
 ### QANet<br>
 Generate dict and embedding：`python OurRun.py --prepare`<br>
 Train： `python OurRun.py --train `<br>
 Evaluate on dev： `python OurRun.py --evaluate`<br>
 Output the answers：` python OurRun.py --predict`<br>
+![](https://img-blog.csdn.net/20180815201736410?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0NDk5MTMw/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
 # Reference
 [1] Yu, A. W., Dohan, D., Luong, M. T., Zhao, R., Chen, K., Norouzi, M., & Le, Q. V. (2018). QANet: Combining Local Convolution with Global Self-Attention for Reading Comprehension. arXiv preprint arXiv:1804.09541.<br>
 [2] Seo, M., Kembhavi, A., Farhadi, A., & Hajishirzi, H. (2016). Bidirectional attention flow for machine comprehension. arXiv preprint arXiv:1611.01603.<br>
