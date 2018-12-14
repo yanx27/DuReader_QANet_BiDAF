@@ -29,7 +29,7 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"## written by Fangyueran
 
 '''Which dataset do you want to use, just choose between search and zhidao'''
-dataName = 'search'  ### Yanxu
+dataName = 'search'  
 
 def parse_args():
     """
@@ -85,7 +85,7 @@ def parse_args():
                                default=['./data/demo/'+dataName+'.dev.json'],
                                help='list of files that contain the preprocessed dev data')  
     path_settings.add_argument('--test_files', nargs='+',
-                               default=['./data/demo/'+dataName+'.test.json'],  ### yanxu
+                               default=['./data/demo/'+dataName+'.test.json'],  
                                help='list of files that contain the preprocessed test data')
     path_settings.add_argument('--save_dir', default='./data/baidu',
                                help='the dir with preprocessed baidu reading comprehension data')

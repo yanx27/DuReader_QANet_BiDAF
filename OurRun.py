@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*- 
 '''
 Writen by YanXu, FangYueran and ZhangTianyang
-Adapted from BiDAF
+Partly adapted from BiDAF
 '''
 import os
 import pickle
@@ -20,7 +20,7 @@ def parse_args():
     --All argument of our model--
     In our experiment, we use:
      --prepare
-     --train --decay 0.9999 --epoch 100
+     --train --decay 0.9999 --epoch 10
      --evaluate --dropout 0
      --predict --dropout 0
     '''
@@ -83,19 +83,18 @@ def parse_args():
                                 help='max length of answer')
     model_settings.add_argument('--max_ch_len', type=int, default=20,
                                 help='max length of character of a word')
-    model_settings.add_argument('--use_position_attn', type=bool, default=True,  ### Our provement ###
+    model_settings.add_argument('--use_position_attn', type=bool, default=True,  ### Our improvement ###
                                 help='use position attention')
 
     path_settings = parser.add_argument_group('path settings')
     path_settings.add_argument('--train_files', nargs='+',
-                               default=['./data/demo/'+dataName+'.train20000.json',
+                               default=['./data/demo/'+dataName+'.train20000.json'],
                                help='list of files that contain the preprocessed train data')
     path_settings.add_argument('--dev_files', nargs='+',
                                default=['./data/demo/'+dataName+'.dev10000.json'],
                                help='list of files that contain the preprocessed dev data')
     path_settings.add_argument('--test_files', nargs='+',
                                default=['./data/demo/'+dataName+'.test.json'],
-                               # './data/demo/'+dataName+'.test10000.json'
                                help='list of files that contain the preprocessed test data')
     path_settings.add_argument('--save_dir', default='./data/baidu',
                                help='the dir with preprocessed baidu reading comprehension data')
