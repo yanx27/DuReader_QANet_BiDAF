@@ -6,7 +6,7 @@ When we train the QANet model, we use the pretrained word embedding from [Baidu 
 https://pan.baidu.com/s/1Rn7LtTH0n7SHyHPfjRHbkg), you can down load and save in folder ./embedding<br>
 ### Full experimental results
 Complete experimental results (including data sets, log of experimental records, tensorboard, and predicted output) can be downloaded from the Baidu network disk：https://pan.baidu.com/s/1qoxnF00wyJ2dqcAPDYTb8w code：gn5b, You can override it with the ./data <br>
-Also you can train and test in completed DuReader dataset http://ai.baidu.com/broad/download :)<br>
+You can also train and test in completed DuReader dataset http://ai.baidu.com/broad/download <br>
 # Usage
 
 ### BiDAF<br>
